@@ -1,5 +1,7 @@
 package net.titanrealms.api.punishments.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import net.titanrealms.api.punishments.model.Punishment;
 import net.titanrealms.api.punishments.model.ReversalInfo;
@@ -12,6 +14,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
+import redis.clients.jedis.Jedis;
 
 import java.time.Instant;
 import java.util.List;
@@ -22,19 +25,27 @@ import java.util.UUID;
 public class PunishmentService {
     private final PunishmentRepository punishmentRepository;
     private final MongoTemplate mongoTemplate;
+    private final Jedis jedis;
 
-    public Punishment addPunishment(Punishment punishment) {
-        return this.punishmentRepository.save(punishment);
+    private final ObjectMapper objectMapper;
+
+    public Punishment addPunishment(Punishment punishment) throws JsonProcessingException {
+        Punishment created = this.punishmentRepository.save(punishment);
+        this.jedis.publish("punishment_api_punishments", this.objectMapper.writeValueAsString(created));
+        return created;
     }
 
-    public Punishment reversePunishment(String punishmentId, ReversalInfo reversalInfo) {
+    public Punishment reversePunishment(String punishmentId, ReversalInfo reversalInfo) throws JsonProcessingException {
         Query query = new Query()
                 .addCriteria(Criteria.where("_id").is(punishmentId));
 
         Update update = new Update();
         update.set("reversalInfo", reversalInfo);
 
-        return this.mongoTemplate.findAndModify(query, update, FindAndModifyOptions.options().returnNew(true), Punishment.class);
+        Punishment modified = this.mongoTemplate.findAndModify(query, update, FindAndModifyOptions.options().returnNew(true), Punishment.class);
+        this.jedis.publish("punishment_api_reversals", this.objectMapper.writeValueAsString(modified));
+
+        return modified;
     }
 
     public Page<Punishment> getPunishments(Pageable pageable, UUID target) {

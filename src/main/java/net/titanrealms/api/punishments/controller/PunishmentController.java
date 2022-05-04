@@ -1,5 +1,6 @@
 package net.titanrealms.api.punishments.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import net.titanrealms.api.punishments.model.Punishment;
 import net.titanrealms.api.punishments.model.ReversalInfo;
@@ -21,12 +22,12 @@ public class PunishmentController {
     private final PunishmentService punishmentService;
 
     @PostMapping
-    public Punishment addPunishment(@RequestBody Punishment punishment) {
+    public Punishment addPunishment(@RequestBody Punishment punishment) throws JsonProcessingException {
         return this.punishmentService.addPunishment(punishment);
     }
 
     @PutMapping("/{punishmentId}/reverse")
-    public Punishment reversePunishment(@PathVariable String punishmentId, @RequestBody ReversalInfo reversalInfo) throws IOException {
+    public Punishment reversePunishment(@PathVariable String punishmentId, @RequestBody ReversalInfo reversalInfo) throws JsonProcessingException {
         return this.punishmentService.reversePunishment(punishmentId, reversalInfo);
     }
 }
