@@ -4,8 +4,8 @@ import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.lang.Nullable;
 
-import javax.annotation.Generated;
 import java.time.Instant;
 import java.util.UUID;
 
@@ -30,4 +30,6 @@ public class Punishment {
 
     @Indexed
     private boolean notified;
+
+    private @Nullable ReversalInfo reversalInfo;
 }
