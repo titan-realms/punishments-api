@@ -1,0 +1,7 @@
+server:
+  port: 30002
+
+spring:
+  data:
+    mongodb:
+      database: "titan-punishments"
