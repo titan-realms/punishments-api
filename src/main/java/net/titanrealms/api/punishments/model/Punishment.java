@@ -1,12 +1,11 @@
 package net.titanrealms.api.punishments.model;
 
 import lombok.Data;
-import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.FieldType;
-import org.springframework.data.mongodb.core.mapping.MongoId;
 
+import javax.annotation.Generated;
 import java.time.Instant;
 import java.util.UUID;
 
@@ -14,8 +13,8 @@ import java.util.UUID;
 @Data
 public class Punishment {
 
-    @MongoId(FieldType.OBJECT_ID)
-    private ObjectId id;
+    @Id
+    private String id;
 
     private Instant timestamp;
 

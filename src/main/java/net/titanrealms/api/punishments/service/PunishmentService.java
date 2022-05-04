@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import net.titanrealms.api.punishments.model.Punishment;
 import net.titanrealms.api.punishments.repository.PunishmentRepository;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -21,19 +20,12 @@ public class PunishmentService {
     private final PunishmentRepository punishmentRepository;
     private final MongoTemplate mongoTemplate;
 
-    public void putPunishment(Punishment punishment) {
-        this.punishmentRepository.save(punishment);
+    public Punishment addPunishment(Punishment punishment) {
+        return this.punishmentRepository.save(punishment);
     }
 
     public Page<Punishment> getPunishments(Pageable pageable, UUID target) {
-        Query query = new Query()
-                .addCriteria(Criteria.where("target").is(target))
-                .with(pageable);
-
-        List<Punishment> result = this.mongoTemplate.find(query, Punishment.class);
-        long count = this.mongoTemplate.count(query, Punishment.class); // i dont like running this twice either but idk
-
-        return new PageImpl<>(result, pageable, count);
+        return this.punishmentRepository.findAllByTarget(target, pageable);
     }
 
     public List<Punishment> getNonNotifiedPunishments(UUID target) {
