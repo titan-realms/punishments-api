@@ -58,7 +58,7 @@ public class PunishmentService {
                 .addCriteria(Criteria.where("notified").is(false))
                 .addCriteria(Criteria.where("target").is(target))
                 .addCriteria(Criteria.where("reversalInfo").exists(false))
-                .with(Sort.by(Sort.Direction.DESC, "timestamp"));
+                .with(Sort.by(Sort.Direction.DESC, "_id"));
 
         return this.mongoTemplate.find(query, Punishment.class);
     }

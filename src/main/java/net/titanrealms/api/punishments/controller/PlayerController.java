@@ -22,7 +22,7 @@ public class PlayerController {
     private final PunishmentService punishmentService;
 
     @GetMapping
-    public Page<Punishment> getPunishments(@PathVariable UUID uuid, @PageableDefault(sort = "timestamp", direction = Sort.Direction.DESC) Pageable pageable) {
+    public Page<Punishment> getPunishments(@PathVariable UUID uuid, @PageableDefault(sort = "_id", direction = Sort.Direction.DESC) Pageable pageable) {
         return this.punishmentService.getPunishments(pageable, uuid);
     }
 

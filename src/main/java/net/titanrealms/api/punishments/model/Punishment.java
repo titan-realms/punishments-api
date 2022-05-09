@@ -18,8 +18,6 @@ public class Punishment {
 
     private PunishmentType punishmentType;
 
-    private Instant timestamp;
-
     private Instant expiry;
 
     @Indexed
@@ -33,5 +31,6 @@ public class Punishment {
     @Indexed
     private boolean notified;
 
-    private @Nullable ReversalInfo reversalInfo;
+    @Nullable
+    private ReversalInfo reversalInfo;
 }
