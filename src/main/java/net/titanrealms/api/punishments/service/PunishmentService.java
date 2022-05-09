@@ -8,6 +8,7 @@ import net.titanrealms.api.punishments.model.ReversalInfo;
 import net.titanrealms.api.punishments.repository.PunishmentRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.FindAndModifyOptions;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -56,7 +57,8 @@ public class PunishmentService {
         Query query = new Query()
                 .addCriteria(Criteria.where("notified").is(false))
                 .addCriteria(Criteria.where("target").is(target))
-                .addCriteria(Criteria.where("reversalInfo").exists(false));
+                .addCriteria(Criteria.where("reversalInfo").exists(false))
+                .with(Sort.by(Sort.Direction.DESC, "timestamp"));
 
         return this.mongoTemplate.find(query, Punishment.class);
     }

@@ -16,6 +16,8 @@ public class Punishment {
     @Id
     private String id;
 
+    private PunishmentType punishmentType;
+
     private Instant timestamp;
 
     private Instant expiry;
